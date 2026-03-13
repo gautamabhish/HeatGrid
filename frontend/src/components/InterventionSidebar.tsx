@@ -327,11 +327,9 @@ export default function InterventionSidebar({
                         </div>
                       </div>
 
-                      {inv.priority_label && (
-                        <div className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">
-                          ⭐ {inv.priority_label}
-                        </div>
-                      )}
+                      <div className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider mb-2">
+                        ⭐ Priority {idx + 1}
+                      </div>
 
                       <p className="text-xs text-slate-400 mb-2">
                         <span className="text-slate-500">Target: </span>{inv.target}

@@ -81,7 +81,7 @@ export default function MapViewer({ osmData, geeData, activeLayers, simulationSt
   const totalReduction = useMemo(() => {
     let reduction = 0;
     if (!simulationState) return 0;
-    
+
     // Map intervention names/types back to approx multipliers (same as ControlPanel rules roughly)
     Object.entries(simulationState).forEach(([type, value]) => {
       const typeLower = type.toLowerCase();
@@ -198,6 +198,27 @@ export default function MapViewer({ osmData, geeData, activeLayers, simulationSt
 
   return (
     <div className="w-full h-full relative">
+      {/* Zone Legend Overlay */}
+      {osmData && (
+        <div className="absolute bottom-6 left-4 bg-slate-900/80 backdrop-blur-md rounded-xl px-3 py-2 border border-slate-700/50 text-xs text-slate-300 space-y-1.5 shadow-xl">
+          <div className="font-semibold text-slate-200 mb-1 uppercase tracking-wider text-[10px]">Zone Legend</div>
+          {[
+            { id: 'misting_zone', color: '#3b82f6', label: 'Misting Zone' },
+            { id: 'reflective_roof_zone', color: '#f97316', label: 'Reflective Roof' },
+            { id: 'green_corridor_zone', color: '#10b981', label: 'Green Corridor' },
+            { id: 'none', color: '#ef4444', label: 'Heat Hotspot' },
+          ].map(z => (
+            <div
+              key={z.id}
+              className="flex items-center gap-2 cursor-help"
+              title={LEGEND_TOOLTIPS[z.id]}
+            >
+              <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: z.color }} />
+              <span>{z.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
       <Map
         {...viewState}
         onMove={evt => setViewState(evt.viewState)}
@@ -232,27 +253,7 @@ export default function MapViewer({ osmData, geeData, activeLayers, simulationSt
         )}
       </Map>
 
-      {/* Zone Legend Overlay */}
-      {osmData && (
-        <div className="absolute bottom-6 left-4 bg-slate-900/80 backdrop-blur-md rounded-xl px-3 py-2 border border-slate-700/50 text-xs text-slate-300 space-y-1.5 shadow-xl">
-          <div className="font-semibold text-slate-200 mb-1 uppercase tracking-wider text-[10px]">Zone Legend</div>
-          {[
-            { id: 'misting_zone', color: '#3b82f6', label: 'Misting Zone' },
-            { id: 'reflective_roof_zone', color: '#f97316', label: 'Reflective Roof' },
-            { id: 'green_corridor_zone', color: '#10b981', label: 'Green Corridor' },
-            { id: 'none', color: '#ef4444', label: 'Heat Hotspot' },
-          ].map(z => (
-            <div 
-              key={z.id} 
-              className="flex items-center gap-2 cursor-help"
-              title={LEGEND_TOOLTIPS[z.id]}
-            >
-              <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: z.color }} />
-              <span>{z.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
+
     </div>
   );
 }

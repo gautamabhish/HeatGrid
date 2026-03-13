@@ -133,7 +133,7 @@ export default function Dashboard() {
           </div>
 
           <div className="absolute top-6 right-6 z-20 pointer-events-auto">
-            <LayerToggle activeLayers={activeLayers} onToggle={handleLayerToggle} />
+            <LayerToggle activeLayers={activeLayers} osmData={cityData?.osm_features} onToggle={handleLayerToggle} />
           </div>
 
           <div className="absolute inset-0 z-0 pl-0">

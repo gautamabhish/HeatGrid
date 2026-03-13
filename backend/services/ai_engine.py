@@ -273,44 +273,44 @@ def get_fallback_recommendations(gee_data, osm_data, shadow_msg, zone_counts=Non
     heavy_roads = len(roads) > 5
     dense_buildings = len(buildings) > 50
 
-    if lack_of_parks and high_heat and heavy_roads:
-        interventions.append({
-            "type": "Green Street Corridor",
-            "icon": "corridor",
-            "target": f"Sun-exposed pavements ({shadow_msg})",
-            "impact_estimate": "-1.5°C ambient",
-            "cost_estimate": "$$$",
-            "roi_score": 15,
-            "priority_label": "Priority 1",
-            "narrative": "Implements a shaded avenue to actively cool key pedestrian thoroughfares.",
-            "engineering_insight": "Wide, heavily paved asphalt roads act as immense thermal batteries, absorbing shortwave radiation and re-emitting it as longwave heat. Introducing a green corridor disrupts this cycle through evapotranspirative cooling and direct canopy shading, which can drop local surface temperatures significantly."
-        })
+    # Always add Green Street Corridor as priority 1 with ROI 85
+    interventions.append({
+        "type": "Green Street Corridor",
+        "icon": "corridor",
+        "target": f"Sun-exposed pavements ({shadow_msg})",
+        "impact_estimate": "-1.5°C ambient",
+        "cost_estimate": "$$$",
+        "roi_score": 85,
+        "priority_label": "Priority 1",
+        "narrative": "Implements a shaded avenue to actively cool key pedestrian thoroughfares.",
+        "engineering_insight": "Wide, heavily paved asphalt roads act as immense thermal batteries, absorbing shortwave radiation and re-emitting it as longwave heat. Introducing a green corridor disrupts this cycle through evapotranspirative cooling and direct canopy shading, which can drop local surface temperatures significantly."
+    })
 
-    if dense_buildings and high_heat:
-        interventions.append({
-            "type": "Cool Reflective Roof",
-            "icon": "roof",
-            "target": "Hotspot Buildings (Dark Roofs)",
-            "impact_estimate": "-2.5°C localized",
-            "cost_estimate": "$",
-            "roi_score": 15,
-            "priority_label": "Priority 2",
-            "narrative": "Upgrades high-absorption building rooftops with highly reflective coatings.",
-            "engineering_insight": "Dense building footprints with dark rooftops have a low albedo, absorbing up to 90% of solar radiation. Applying reflective cool roof coatings increases albedo, deflecting the sun's energy back into the atmosphere rather than transferring it into the building's thermal mass or the surrounding air."
-        })
+    # Always add Cool Reflective Roof as priority 3 with ROI 70
+    interventions.append({
+        "type": "Cool Reflective Roof",
+        "icon": "roof",
+        "target": "Hotspot Buildings (Dark Roofs)",
+        "impact_estimate": "-2.5°C localized",
+        "cost_estimate": "$",
+        "roi_score": 70,
+        "priority_label": "Priority 3",
+        "narrative": "Upgrades high-absorption building rooftops with highly reflective coatings.",
+        "engineering_insight": "Dense building footprints with dark rooftops have a low albedo, absorbing up to 90% of solar radiation. Applying reflective cool roof coatings increases albedo, deflecting the sun's energy back into the atmosphere rather than transferring it into the building's thermal mass or the surrounding air."
+    })
 
-    if avg_temp > 33.0 and dense_buildings:
-        interventions.append({
-            "type": "Public Misting Station",
-            "icon": "mist",
-            "target": "High Pedestrian Traffic Squares",
-            "impact_estimate": "Immediate Relief",
-            "cost_estimate": "$$",
-            "roi_score": 20,
-            "priority_label": "Priority 1",
-            "narrative": "Deploys atomized water systems in concentrated human-traffic zones.",
-            "engineering_insight": "When surface temperatures exceed 33°C in dense urban canyons, natural convective cooling fails. Misting stations leverage the latent heat of vaporization; as the micro-droplets evaporate, they absorb sensible heat from the surrounding air, creating an immediate and localized drop in ambient temperature."
-        })
+    # Always add Public Misting Station as priority 2 with ROI 92
+    interventions.append({
+        "type": "Public Misting Station",
+        "icon": "mist",
+        "target": "High Pedestrian Traffic Squares",
+        "impact_estimate": "Immediate Relief",
+        "cost_estimate": "$$",
+        "roi_score": 92,
+        "priority_label": "Priority 2",
+        "narrative": "Deploys atomized water systems in concentrated human-traffic zones.",
+        "engineering_insight": "When surface temperatures exceed 33°C in dense urban canyons, natural convective cooling fails. Misting stations leverage the latent heat of vaporization; as the micro-droplets evaporate, they absorb sensible heat from the surrounding air, creating an immediate and localized drop in ambient temperature."
+    })
 
     interventions.sort(key=lambda x: x.get("roi_score", 0), reverse=True)
     return {

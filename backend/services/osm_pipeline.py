@@ -58,7 +58,8 @@ async def get_osm_data(city_name: str, lat: float = None, lng: float = None):
         amenities = safe_fetch(point, tags={'amenity': ['school', 'hospital', 'kindergarten', 'marketplace']}, dist=radius)
         if not amenities.empty:
             amenities = amenities[amenities.geometry.type.isin(['Polygon', 'MultiPolygon', 'Point'])]
-        print("Amenity data fetched")   
+        print("Amenity data fetched")
+        yield json.dumps({"status": "amenities_fetched"})
         
         # 3. Parks (Leisure=park, landuse=grass/forest)
         parks = safe_fetch(point, tags={
@@ -200,7 +201,7 @@ async def get_osm_data(city_name: str, lat: float = None, lng: float = None):
             water_json = {"type": "FeatureCollection", "features": []}
 
         import time
-        return {
+        yield {
             "center": [lng, lat],
             "timestamp": time.time(),
             "buildings": buildings_json,
@@ -210,4 +211,4 @@ async def get_osm_data(city_name: str, lat: float = None, lng: float = None):
         }
     except Exception as e:
         print(f"OSM Error: {e}")
-        return {"error": str(e)}
+        yield {"error": str(e)}

@@ -32,11 +32,21 @@ async def analyze_city(req: CityRequest):
             # Stage 1: OSM Fetching
             yield json.dumps({"status": "loading", "message": "Fetching map sub-sections..."}) + "\n"
             await asyncio.sleep(0.1) # small flush yield
-            osm_data = await get_osm_data(full_name, lat=req.lat, lng=req.lng)
+            
+            osm_data = None
+            async for chunk in get_osm_data(full_name, lat=req.lat, lng=req.lng):
+                if isinstance(chunk, str):
+                    # It's a status update JSON string like '{"status": "buildings_fetched"}'
+                    yield chunk + "\n"
+                elif isinstance(chunk, dict):
+                    # It's the final payload dict or an error dict
+                    osm_data = chunk
+            
             print("OSM data fetched")
             
-            if "error" in osm_data:
-                yield json.dumps({"status": "error", "message": f"Could not find map data for '{full_name}'. (OSM error: {osm_data['error']})"}) + "\n"
+            if not osm_data or "error" in osm_data:
+                err_msg = osm_data["error"] if osm_data else "Unknown error"
+                yield json.dumps({"status": "error", "message": f"Could not find map data for '{full_name}'. (OSM error: {err_msg})"}) + "\n"
                 return
 
             yield json.dumps({"status": "loading", "message": "Analyzing street footprints and greenery..."}) + "\n"
