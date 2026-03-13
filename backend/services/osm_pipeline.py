@@ -42,6 +42,7 @@ async def get_osm_data(city_name: str, lat: float = None, lng: float = None):
                     cols_to_keep.append(tag)
             buildings = buildings[cols_to_keep]
         print("Building data fetched")
+        yield json.dumps({"status": "buildings_fetched"})
         # 2. Roads (Highways) & Pedestrian Infrastructure
         # Include 'width' or 'lanes', and 'highway' types to gauge pedestrian flow
         roads = safe_fetch(point, tags={'highway': True}, dist=radius)
@@ -52,7 +53,7 @@ async def get_osm_data(city_name: str, lat: float = None, lng: float = None):
                 if tag in roads.columns: cols_to_keep.append(tag)
             roads = roads[cols_to_keep]
         print("Road data fetched")
-
+        yield json.dumps({"status": "roads_fetched"})
         # 2.5 High-Value / High-Pedestrian Amenities (Schools, Hospitals)
         amenities = safe_fetch(point, tags={'amenity': ['school', 'hospital', 'kindergarten', 'marketplace']}, dist=radius)
         if not amenities.empty:
