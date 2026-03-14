@@ -1,0 +1,17 @@
+Collecting motor
+  Downloading motor-3.7.1-py3-none-any.whl.metadata (21 kB)
+Collecting pymongo<5.0,>=4.9 (from motor)
+  Downloading pymongo-4.16.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10.0 kB)
+Collecting dnspython<3.0.0,>=2.6.1 (from pymongo<5.0,>=4.9->motor)
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Downloading motor-3.7.1-py3-none-any.whl (74 kB)
+   ━━━━━━━━ 75.0/75… 549.7     eta 0:00:00
+            kB       kB/s                 
+Downloading pymongo-4.16.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+   ━━━━━━━━ 1.7/1.7   1.6 MB/s eta 0:00:00
+            MB                            
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+   ━━━━━━━━ 331.1/33… 2.0 MB/s eta 0:00:00
+            kB                            
+Installing collected packages: dnspython, pymongo, motor
+Successfully installed dnspython-2.8.0 motor-3.7.1 pymongo-4.16.0

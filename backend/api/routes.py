@@ -17,6 +17,7 @@ class CityRequest(BaseModel):
 from fastapi.responses import StreamingResponse
 import json
 import asyncio
+from core.database import get_database
 
 @router.post("/analyze-city")
 async def analyze_city(req: CityRequest):
@@ -29,6 +30,17 @@ async def analyze_city(req: CityRequest):
 
     async def stream_analysis():
         try:
+            db = get_database()
+            if db is not None:
+                city_cache_key = full_name.lower().strip()
+                cached_data = await db.city_analysis.find_one({"_id": city_cache_key})
+                if cached_data and "payload" in cached_data:
+                    print(f"Cache hit for {full_name}!")
+                    yield json.dumps({"status": "loading", "message": "Loading from cache..."}) + "\n"
+                    await asyncio.sleep(0.1)
+                    yield json.dumps(cached_data["payload"]) + "\n"
+                    return
+
             # Stage 1: OSM Fetching
             yield json.dumps({"status": "loading", "message": "Fetching map sub-sections..."}) + "\n"
             await asyncio.sleep(0.1) # small flush yield
@@ -96,6 +108,18 @@ async def analyze_city(req: CityRequest):
                     "zone_counts": ai_result.get("zone_counts", {}),
                 }
             }
+            
+            if db is not None:
+                try:
+                    await db.city_analysis.update_one(
+                        {"_id": full_name.lower().strip()},
+                        {"$set": {"payload": final_payload}},
+                        upsert=True
+                    )
+                    print(f"Saved {full_name} to cache.")
+                except Exception as cache_err:
+                    print(f"Failed to cache data for {full_name}: {cache_err}")
+                    
             yield json.dumps(final_payload) + "\n"
 
         except Exception as e:
