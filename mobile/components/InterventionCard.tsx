@@ -33,12 +33,10 @@ export default function InterventionCard({ intervention: inv, index, expanded, o
     <View style={styles.card}>
       {/* Header row */}
       <View style={styles.headerRow}>
-        <View style={[styles.iconBadge, { backgroundColor: iconCfg.bg }]}>
-          <Text style={styles.iconEmoji}>{iconCfg.emoji}</Text>
-        </View>
+       
         <View style={styles.titleBlock}>
           <Text style={styles.title} numberOfLines={1}>{inv.type}</Text>
-          <Text style={[styles.priority, { color: Colors.amber }]}>⭐ Priority {index + 1}</Text>
+          <Text style={[styles.priority, { color: Colors.amber }]}> Priority {index + 1}</Text>
         </View>
         <View style={styles.badges}>
           {inv.roi_score !== undefined && (

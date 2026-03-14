@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  SafeAreaView,
+  
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCityContext } from '@/context/CityContext';
 import InterventionCard from '@/components/InterventionCard';
-import SimulationSlider from '@/components/SimulationSlider';
+import GestureSlider from '@/components/GestureSlider';
 import { Colors, Spacing, Radius } from '@/constants/theme';
 
 type Tab = 'interventions' | 'report';
@@ -52,7 +53,7 @@ export default function ReportScreen() {
 
   if (!cityData && !loading) {
     return (
-      <SafeAreaView style={[styles.container, styles.emptyState]}>
+      <SafeAreaView edges={['top']} style={[styles.container, styles.emptyState]}>
         <Text style={styles.emptyIcon}>🗺️</Text>
         <Text style={styles.emptyTitle}>No city analyzed yet</Text>
         <Text style={styles.emptyMsg}>Search for a city on the Map tab to see AI cooling recommendations and urban heat analysis here.</Text>
@@ -62,7 +63,7 @@ export default function ReportScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, styles.emptyState]}>
+      <SafeAreaView edges={['top']} style={[styles.container, styles.emptyState]}>
         <View style={styles.loadingRing} />
         <Text style={styles.emptyMsg}>Analyzing urban heat data...</Text>
       </SafeAreaView>
@@ -70,7 +71,7 @@ export default function ReportScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {/* Header */}
       <LinearGradient colors={['#0f172a', '#020617']} style={styles.header}>
         <View style={styles.headerTop}>
@@ -129,7 +130,7 @@ export default function ReportScreen() {
             {/* Summary card */}
             {cityData?.overall_summary && (
               <View style={styles.summaryCard}>
-                <Text style={styles.sectionLabel}>ℹ️  City Analysis</Text>
+                <Text style={styles.sectionLabel}>ℹ  City Analysis</Text>
                 <Text style={styles.summaryText}>{cityData.overall_summary}</Text>
               </View>
             )}
@@ -137,11 +138,11 @@ export default function ReportScreen() {
             {/* Shadow card */}
             {cityData?.shadow_msg && (
               <View style={styles.shadowCard}>
-                <Text style={styles.shadowTitle}>☀️ Shadow Modeling (July 2PM)</Text>
+                <Text style={styles.shadowTitle}> Shadow Modeling (July 2PM)</Text>
                 <Text style={styles.shadowMsg}>{cityData.shadow_msg}</Text>
                 {cityData.tree_recommendation_side && (
                   <View style={styles.treeBadge}>
-                    <Text style={styles.treeText}>🌳 Plant trees on: {cityData.tree_recommendation_side}</Text>
+                    <Text style={styles.treeText}> Plant trees on: {cityData.tree_recommendation_side}</Text>
                   </View>
                 )}
               </View>
@@ -197,7 +198,7 @@ export default function ReportScreen() {
                   {interventions.map(inv => {
                     const rules = getInterventionRules(inv.icon);
                     return (
-                      <SimulationSlider
+                      <GestureSlider
                         key={inv.type}
                         label={inv.type}
                         value={simulationState[inv.type] ?? 0}
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
   tabTextBlue: { color: Colors.blue },
 
   body: { flex: 1 },
-  bodyContent: { padding: Spacing.md, paddingBottom: 40 },
+  bodyContent: { padding: Spacing.md, paddingBottom: 100 },
   section: { gap: 10 },
 
   sectionLabel: { color: Colors.textFaint, fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },

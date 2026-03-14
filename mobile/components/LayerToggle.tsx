@@ -21,33 +21,33 @@ const LAYERS: {
       key: 'heat',
       label: 'Heatmap',
       emoji: '',
-      activeColor: '#f87171',
-      activeBg: 'rgba(127,29,29,0.5)',
-      activeBorder: 'rgba(239,68,68,0.5)',
+      activeColor: '#fca5a5',
+      activeBg: 'rgba(153,27,27,0.6)',
+      activeBorder: 'rgba(239,68,68,0.7)',
     },
     {
       key: 'trees',
       label: 'Trees',
       emoji: '',
-      activeColor: '#a78bfa',
-      activeBg: 'rgba(46,16,101,0.5)',
-      activeBorder: 'rgba(167,139,250,0.5)',
+      activeColor: '#86efac',
+      activeBg: 'rgba(20,83,45,0.6)',
+      activeBorder: 'rgba(34,197,94,0.7)',
     },
     {
       key: 'roofs',
       label: 'Cool Roofs',
       emoji: '',
-      activeColor: '#f472b6',
-      activeBg: 'rgba(80,7,36,0.5)',
-      activeBorder: 'rgba(244,114,182,0.5)',
+      activeColor: '#c4b5fd',
+      activeBg: 'rgba(76,29,149,0.6)',
+      activeBorder: 'rgba(167,139,250,0.7)',
     },
     {
       key: 'corridors',
       label: 'Corridors',
       emoji: '',
-      activeColor: '#22d3ee',
-      activeBg: 'rgba(8,51,68,0.5)',
-      activeBorder: 'rgba(34,211,238,0.5)',
+      activeColor: '#67e8f9',
+      activeBg: 'rgba(8,51,68,0.6)',
+      activeBorder: 'rgba(34,211,238,0.7)',
     },
   ];
 
@@ -65,7 +65,7 @@ export default function LayerToggle({ activeLayers, onToggle }: LayerToggleProps
             <TouchableOpacity
               key={layer.key}
               onPress={() => onToggle(layer.key)}
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               style={[
                 styles.pill,
                 isActive
@@ -80,11 +80,15 @@ export default function LayerToggle({ activeLayers, onToggle }: LayerToggleProps
               <Text
                 style={[
                   styles.label,
-                  { color: isActive ? layer.activeColor : Colors.textMuted },
+                  { color: isActive ? layer.activeColor : 'rgba(148,163,184,0.8)' },
                 ]}
               >
                 {layer.label}
               </Text>
+              {/* active indicator dot */}
+              {isActive && (
+                <View style={[styles.dot, { backgroundColor: layer.activeColor }]} />
+              )}
             </TouchableOpacity>
           );
         })}
@@ -95,41 +99,48 @@ export default function LayerToggle({ activeLayers, onToggle }: LayerToggleProps
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: 'rgba(15,23,42,0.85)',
+    backgroundColor: 'rgba(2,6,23,0.82)',
     borderRadius: Radius.full,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'rgba(255,255,255,0.12)',
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
-    elevation: 8,
-    padding: 3,
-    maxWidth: '100%',
+    shadowOpacity: 0.6,
+    shadowRadius: 18,
+    elevation: 10,
+    paddingVertical: 3,
+    paddingHorizontal: 4,
   },
   scrollContent: {
-    gap: 8,
+    gap: 4,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 4,
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 7,
     borderRadius: Radius.full,
     borderWidth: 1,
   },
   pillInactive: {
-    backgroundColor: 'rgba(255,255,255,0.03)',
-    borderColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderColor: 'rgba(255,255,255,0.12)',
   },
   emoji: { fontSize: 13 },
   label: {
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    marginLeft: 1,
   },
 });

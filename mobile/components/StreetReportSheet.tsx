@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Colors, Radius, Spacing } from '@/constants/theme';
-import SimulationSlider from '@/components/SimulationSlider';
+import GestureSlider from '@/components/GestureSlider';
 import type { InterventionData } from '@/hooks/useCityAnalysis';
 
 interface StreetReportSheetProps {
@@ -18,15 +18,25 @@ interface StreetReportSheetProps {
 
 const getInterventionRules = (icon?: string) => {
   switch (icon) {
-    case 'tree':     return { max: 100, step: 10, unit: '%', tempRedux: 0.05, color: Colors.lime };
-    case 'roof':     return { max: 100, step: 10, unit: '%', tempRedux: 0.04, color: Colors.pink };
-    case 'mist':     return { max: 1000, step: 100, unit: ' units', tempRedux: 0.002, color: Colors.cyan };
-    case 'corridor': return { max: 50, step: 5, unit: ' km', tempRedux: 0.1, color: Colors.violet };
-    case 'pavement': return { max: 100, step: 10, unit: '%', tempRedux: 0.015, color: Colors.blue };
-    default:         return { max: 100, step: 10, unit: '%', tempRedux: 0.02, color: Colors.amber };
+    case 'tree':
+      return { max: 100, step: 1, unit: '%', tempRedux: 0.05, color: Colors.lime };
+
+    case 'roof':
+      return { max: 100, step: 1, unit: '%', tempRedux: 0.04, color: Colors.pink };
+
+    case 'mist':
+      return { max: 1000, step: 10, unit: ' units', tempRedux: 0.002, color: Colors.cyan };
+
+    case 'corridor':
+      return { max: 50, step: 0.5, unit: ' km', tempRedux: 0.1, color: Colors.violet };
+
+    case 'pavement':
+      return { max: 100, step: 1, unit: '%', tempRedux: 0.015, color: Colors.blue };
+
+    default:
+      return { max: 100, step: 1, unit: '%', tempRedux: 0.02, color: Colors.amber };
   }
 };
-
 const ZONE_LABELS: Record<string, { emoji: string; label: string; color: string }> = {
   misting_zone:         { emoji: '', label: 'Misting Zone',   color: Colors.cyan },
   reflective_roof_zone: { emoji: '', label: 'Cool Roof Zone', color: Colors.pink },
@@ -172,7 +182,7 @@ export default function StreetReportSheet({
           {interventions.map(inv => {
             const rules = getInterventionRules(inv.icon);
             return (
-              <SimulationSlider
+              <GestureSlider
                 key={inv.type}
                 label={inv.type}
                 value={simulationState[inv.type] || 0}
@@ -180,7 +190,7 @@ export default function StreetReportSheet({
                 step={rules.step}
                 unit={rules.unit}
                 accentColor={rules.color}
-                onChange={val => onSimChange(inv.type, val)}
+                onChange={(val) => onSimChange(inv.type, val)}
               />
             );
           })}

@@ -110,30 +110,33 @@ export default function MapScreen() {
           animationDuration={1000}
         />
 
-        {parkData && (
+        {/* Parks layer — only visible when 'trees' is active */}
+        {parkData && activeLayers.has('trees') && (
           <MapLibreGL.ShapeSource id="parks" shape={parkData as any}>
             <MapLibreGL.FillLayer
               id="parks-fill"
               style={{
-                fillColor: '#166534',
-                fillOpacity: 0.6
+                fillColor: '#16a34a',
+                fillOpacity: 0.65
               }}
             />
           </MapLibreGL.ShapeSource>
         )}
 
-        {roadData && (
+        {/* Roads / corridors layer — only visible when 'corridors' is active */}
+        {roadData && activeLayers.has('corridors') && (
           <MapLibreGL.ShapeSource id="roads" shape={roadData as any}>
             <MapLibreGL.LineLayer
               id="roads-line"
               style={{
-                lineColor: '#475569',
-                lineWidth: 2
+                lineColor: '#22d3ee',
+                lineWidth: 2.5
               }}
             />
           </MapLibreGL.ShapeSource>
         )}
 
+        {/* Buildings — color driven by heat toggle; roofs toggle adds cool purple tint */}
         {buildingData && (
           <MapLibreGL.ShapeSource
             id="buildings"
@@ -144,7 +147,11 @@ export default function MapScreen() {
               id="buildings-3d"
               minZoomLevel={12}
               style={{
-                fillExtrusionColor: getBuildingColorExpr(activeLayers) as any,
+                fillExtrusionColor: activeLayers.has('heat')
+                  ? (getBuildingColorExpr(activeLayers) as any)
+                  : activeLayers.has('roofs')
+                  ? '#7c3aed'
+                  : '#334155',
                 fillExtrusionHeight: 12,
                 fillExtrusionOpacity: 0.9
               }}
@@ -179,7 +186,7 @@ export default function MapScreen() {
       {cityData && !loading && (
         <View style={styles.metricsChip}>
           <Text style={styles.metricText}>
-            🌡{' '}
+            {' '}
             <Text style={{ color: Colors.red }}>
               {cityData.gee_metrics.avg_lst_celsius.toFixed(1)}°C
             </Text>
@@ -240,14 +247,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingTop:
       Platform.OS === 'android'
-        ? (StatusBar.currentHeight || 0) + 12
+        ? (StatusBar.currentHeight || 0) + 6
         : 12,
     zIndex: 20,
     elevation: 50
   },
 
   layerToggleContainer: {
-    alignItems: 'flex-end'
+    alignSelf: 'stretch',
   },
 
   metricsChip: {
