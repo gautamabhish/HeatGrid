@@ -38,7 +38,7 @@ interface SidebarProps {
 // Logic rules defining how different tool sliders affect temperature and energy models
 const getInterventionRules = (icon?: string) => {
   switch (icon) {
-    case 'tree': return { max: 100, step: 10, unit: '%',  tempRedux: 0.05, Icon: TreePine };
+    case 'tree': return { max: 100, step: 10, unit: '%', tempRedux: 0.05, Icon: TreePine };
     case 'roof': return { max: 100, step: 10, unit: '%', tempRedux: 0.04, Icon: Home };
     case 'mist': return { max: 1000, step: 100, unit: ' units', tempRedux: 0.002, Icon: Droplets };
     case 'corridor': return { max: 50, step: 5, unit: ' km', tempRedux: 0.1, Icon: Navigation };
@@ -80,10 +80,10 @@ function GaugeRing({ value, max = 1, color, label, sublabel }: { value: number; 
 
 function ZoneChip({ zone }: { zone: string }) {
   const config: Record<string, { color: string; label: string }> = {
-    misting_zone: { color: 'bg-blue-900/50 text-blue-300 border-blue-600/40', label: '💧 Misting Zone' },
-    reflective_roof_zone: { color: 'bg-orange-900/50 text-orange-300 border-orange-600/40', label: '🏠 Cool Roof Zone' },
-    green_corridor_zone: { color: 'bg-emerald-900/50 text-emerald-300 border-emerald-600/40', label: '🌿 Green Corridor' },
-    none: { color: 'bg-red-900/50 text-red-300 border-red-600/40', label: '🔥 Heat Hotspot' },
+    misting_zone: { color: 'bg-cyan-900/50 text-cyan-300 border-cyan-600/40', label: ' Misting Zone' },
+    reflective_roof_zone: { color: 'bg-pink-900/50 text-pink-300 border-pink-600/40', label: ' Cool Roof Zone' },
+    green_corridor_zone: { color: 'bg-violet-900/50 text-violet-300 border-violet-600/40', label: ' Green Corridor' },
+    none: { color: 'bg-red-900/50 text-red-300 border-red-600/40', label: ' Heat Hotspot' },
   };
   const c = config[zone] || config['none'];
   return (
@@ -94,19 +94,25 @@ function ZoneChip({ zone }: { zone: string }) {
 }
 
 function InterventionIcon({ icon }: { icon?: string }) {
+  let inner, bg, border;
   switch (icon) {
-    case 'tree': return <TreePine size={16} className="text-emerald-400" />;
-    case 'roof': return <Home size={16} className="text-orange-400" />;
-    case 'mist': return <Droplets size={16} className="text-blue-400" />;
-    case 'corridor': return <Navigation size={16} className="text-teal-400" />;
-    default: return <Zap size={16} className="text-amber-400" />;
+    case 'tree': inner = <TreePine size={16} className="text-lime-400" />; bg = 'bg-lime-950/40'; border = 'border-lime-500/30'; break;
+    case 'roof': inner = <Home size={16} className="text-pink-400" />; bg = 'bg-pink-950/40'; border = 'border-pink-500/30'; break;
+    case 'mist': inner = <Droplets size={16} className="text-cyan-400" />; bg = 'bg-cyan-950/40'; border = 'border-cyan-500/30'; break;
+    case 'corridor': inner = <Navigation size={16} className="text-violet-400" />; bg = 'bg-violet-950/40'; border = 'border-violet-500/30'; break;
+    default: inner = <Zap size={16} className="text-fuchsia-400" />; bg = 'bg-fuchsia-950/40'; border = 'border-fuchsia-500/30'; break;
   }
+  return (
+    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-inner border group-hover:scale-110 transition-transform ${bg} ${border}`}>
+      {inner}
+    </div>
+  );
 }
 
 function ROIBadge({ score }: { score: number }) {
   const color = score >= 70 ? 'bg-red-900/40 text-red-400 border-red-500/40'
     : score >= 40 ? 'bg-amber-900/40 text-amber-400 border-amber-500/40'
-    : 'bg-slate-800 text-slate-400 border-slate-600/40';
+      : 'bg-slate-800 text-slate-400 border-slate-600/40';
   return (
     <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${color} uppercase tracking-wide`}>
       ROI {score}
@@ -158,11 +164,10 @@ export default function InterventionSidebar({
           </div>
           {city && (
             <div className="flex flex-col items-end gap-1 shrink-0">
-              <div className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                avgLST > 35 ? 'bg-red-900/50 text-red-400' :
-                avgLST > 30 ? 'bg-orange-900/50 text-orange-400' :
-                'bg-amber-900/50 text-amber-400'
-              }`}>
+              <div className={`text-xs font-bold px-2 py-0.5 rounded-full ${avgLST > 35 ? 'bg-red-900/50 text-red-400' :
+                  avgLST > 30 ? 'bg-orange-900/50 text-orange-400' :
+                    'bg-amber-900/50 text-amber-400'
+                }`}>
                 {avgLST.toFixed(1)}°C
               </div>
               <div className="text-[10px] text-slate-500">Avg Surface Temp</div>
@@ -207,21 +212,19 @@ export default function InterventionSidebar({
         <div className="flex border-b border-slate-800 shrink-0">
           <button
             onClick={() => setActiveTab('interventions')}
-            className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
-              activeTab === 'interventions'
+            className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors ${activeTab === 'interventions'
                 ? 'text-emerald-400 border-b-2 border-emerald-500 bg-emerald-950/20'
                 : 'text-slate-500 hover:text-slate-300'
-            }`}
+              }`}
           >
             AI Interventions
           </button>
           <button
             onClick={() => setActiveTab('report')}
-            className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
-              activeTab === 'report'
+            className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors ${activeTab === 'report'
                 ? 'text-blue-400 border-b-2 border-blue-500 bg-blue-950/20'
                 : 'text-slate-500 hover:text-slate-300'
-            }`}
+              }`}
           >
             {selectedFeature ? 'Street Report' : 'City Report'}
           </button>
@@ -273,21 +276,21 @@ export default function InterventionSidebar({
                   <div className="text-[10px] font-semibold text-yellow-400/90 uppercase tracking-wider mb-1">Shadow Modeling (July 2PM)</div>
                   <p className="text-xs text-slate-300 leading-relaxed">{shadowMsg}</p>
                   {treeRecommendationSide && (
-                     <p className="text-xs font-medium text-emerald-400 mt-2 bg-emerald-500/10 px-2 py-1 rounded inline-block" title="Determined by parsing vector geometry against standard astronomical algorithms for this latitude.">
-                        🌳 Plant trees on: <strong>{treeRecommendationSide}</strong>
-                     </p>
+                    <p className="text-xs font-medium text-emerald-400 mt-2 bg-emerald-500/10 px-2 py-1 rounded inline-block" title="Determined by parsing vector geometry against standard astronomical algorithms for this latitude.">
+                      🌳 Plant trees on: <strong>{treeRecommendationSide}</strong>
+                    </p>
                   )}
                 </div>
               </div>
             )}
 
             {/* Zone summary */}
-            {zoneCounts && Object.keys(zoneCounts).length > 0 && (
+            {/* {zoneCounts && Object.keys(zoneCounts).length > 0 && (
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { key: 'misting_zone', label: 'Misting', color: 'text-blue-400', bg: 'bg-blue-950/40 border-blue-800/30' },
-                  { key: 'reflective_roof_zone', label: 'Cool Roof', color: 'text-orange-400', bg: 'bg-orange-950/40 border-orange-800/30' },
-                  { key: 'green_corridor_zone', label: 'Corridor', color: 'text-emerald-400', bg: 'bg-emerald-950/40 border-emerald-800/30' },
+                  { key: 'misting_zone', label: 'Misting', color: 'text-cyan-400', bg: 'bg-cyan-950/40 border-cyan-800/30' },
+                  { key: 'reflective_roof_zone', label: 'Cool Roof', color: 'text-pink-400', bg: 'bg-pink-950/40 border-pink-800/30' },
+                  { key: 'green_corridor_zone', label: 'Corridor', color: 'text-violet-400', bg: 'bg-violet-950/40 border-violet-800/30' },
                 ].map(z => (
                   <div key={z.key} className={`rounded-lg p-2.5 border text-center ${z.bg}`}>
                     <div className={`text-xl font-bold ${z.color}`}>{zoneCounts[z.key] || 0}</div>
@@ -295,7 +298,7 @@ export default function InterventionSidebar({
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
 
             {/* AI Interventions */}
             {interventions.length > 0 ? (
@@ -314,9 +317,7 @@ export default function InterventionSidebar({
                     <div className="p-4">
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-slate-800/80 flex items-center justify-center shrink-0 shadow-inner border border-white/5 group-hover:scale-110 transition-transform">
-                            <InterventionIcon icon={inv.icon} />
-                          </div>
+                          <InterventionIcon icon={inv.icon} />
                           <span className="font-bold text-sm text-white">{inv.type}</span>
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
@@ -342,24 +343,24 @@ export default function InterventionSidebar({
                       )}
 
                       {inv.engineering_insight && (
-                         <div className="mb-3">
-                           <button
-                             onClick={(e) => {
-                               e.stopPropagation();
-                               setExpandedInsight(expandedInsight === idx ? null : idx);
-                             }}
-                             className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-wider"
-                           >
-                              <Info size={12} />
-                              {expandedInsight === idx ? 'Hide Engineer Insight' : 'Why this works'}
-                           </button>
-                           
-                           {expandedInsight === idx && (
-                             <div className="mt-2 text-xs text-slate-400 bg-slate-950/50 p-2.5 rounded border border-slate-800/80 leading-relaxed">
-                               {inv.engineering_insight}
-                             </div>
-                           )}
-                         </div>
+                        <div className="mb-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedInsight(expandedInsight === idx ? null : idx);
+                            }}
+                            className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-wider"
+                          >
+                            <Info size={12} />
+                            {expandedInsight === idx ? 'Hide Engineer Insight' : 'Why this works'}
+                          </button>
+
+                          {expandedInsight === idx && (
+                            <div className="mt-2 text-xs text-slate-400 bg-slate-950/50 p-2.5 rounded border border-slate-800/80 leading-relaxed">
+                              {inv.engineering_insight}
+                            </div>
+                          )}
+                        </div>
                       )}
 
                       <div className="flex items-center justify-between pt-2 border-t border-slate-800/60">
@@ -417,31 +418,31 @@ export default function InterventionSidebar({
                   {/* SVF + Ped Score gauges */}
                   <div className="flex justify-around py-3 border-y border-slate-800/60">
                     <div title="Sky View Factor: Evaluates how open the sky is versus the building facades. Lower is canyon-like.">
-                        <GaugeRing
+                      <GaugeRing
                         value={svf}
                         max={1}
                         color="#10b981"
                         label="Sky View"
                         sublabel={svf < 0.4 ? 'Deep Canyon' : svf < 0.6 ? 'Moderate' : 'Open Sky'}
-                        />
+                      />
                     </div>
                     <div title="Estimate of relative foot traffic exposure to extreme heat based on building types.">
-                        <GaugeRing
+                      <GaugeRing
                         value={pedScore}
                         max={10}
                         color="#3b82f6"
                         label="Foot Traffic"
                         sublabel={pedScore >= 8 ? 'Very High' : pedScore >= 5 ? 'Moderate' : 'Low'}
-                        />
+                      />
                     </div>
                     <div title="Estimated surface coolness relative to surroundings. Lower is hotter.">
-                        <GaugeRing
+                      <GaugeRing
                         value={Math.max(0, 45 - adjustedLST) / 45}
                         max={1}
                         color={adjustedLST > 35 ? '#ef4444' : adjustedLST > 30 ? '#f97316' : '#fcd34d'}
                         label="Coolness"
                         sublabel={`${adjustedLST.toFixed(1)}°C`}
-                        />
+                      />
                     </div>
                   </div>
 
@@ -475,9 +476,9 @@ export default function InterventionSidebar({
                       <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Impact Simulator</span>
                     </div>
                     {totalLocalReduction > 0 && (
-                        <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                         -{totalLocalReduction.toFixed(1)}°C
-                        </span>
+                      </span>
                     )}
                   </div>
 
@@ -502,29 +503,29 @@ export default function InterventionSidebar({
                   </div>
 
                   <div className="space-y-3 mt-4 border-t border-slate-800/60 pt-4">
-                     <p className="text-[10px] text-slate-500 text-center uppercase tracking-wider mb-2">Adjust Local Interventions</p>
-                     
-                     {interventions.length > 0 ? interventions.map(inv => {
-                        const rules = getInterventionRules(inv.icon);
-                        const value = simulationState[inv.type] || 0;
-                        const IconComponent = rules.Icon;
-                        return (
-                           <div key={inv.type} className="mb-2">
-                              <div className="flex justify-between text-xs mb-1">
-                                 <span className="text-slate-300 flex items-center gap-1.5"><IconComponent size={12} className="text-slate-400"/> {inv.type}</span>
-                                 <span className="text-slate-400">{value}{rules.unit}</span>
-                              </div>
-                              <input
-                                 type="range" min="0" max={rules.max} step={rules.step}
-                                 value={value}
-                                 onChange={e => onSimChange(inv.type, Number(e.target.value))}
-                                 className="w-full h-1 bg-slate-700 rounded-full appearance-none cursor-pointer accent-emerald-500"
-                              />
-                           </div>
-                        )
-                     }) : (
-                        <p className="text-xs text-slate-500 text-center">No simulated variables applied.</p>
-                     )}
+                    <p className="text-[10px] text-slate-500 text-center uppercase tracking-wider mb-2">Adjust Local Interventions</p>
+
+                    {interventions.length > 0 ? interventions.map(inv => {
+                      const rules = getInterventionRules(inv.icon);
+                      const value = simulationState[inv.type] || 0;
+                      const IconComponent = rules.Icon;
+                      return (
+                        <div key={inv.type} className="mb-2">
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-slate-300 flex items-center gap-1.5"><IconComponent size={12} className="text-slate-400" /> {inv.type}</span>
+                            <span className="text-slate-400">{value}{rules.unit}</span>
+                          </div>
+                          <input
+                            type="range" min="0" max={rules.max} step={rules.step}
+                            value={value}
+                            onChange={e => onSimChange(inv.type, Number(e.target.value))}
+                            className="w-full h-1 bg-slate-700 rounded-full appearance-none cursor-pointer accent-emerald-500"
+                          />
+                        </div>
+                      )
+                    }) : (
+                      <p className="text-xs text-slate-500 text-center">No simulated variables applied.</p>
+                    )}
                   </div>
                 </div>
               </>

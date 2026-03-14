@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Any City Heat Mapper",
+  title: "HeatGrid",
   description: "AI-powered urban heat island analysis and cooling intervention recommendations for any city in the world.",
 };
 

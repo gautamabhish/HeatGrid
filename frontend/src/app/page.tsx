@@ -108,6 +108,10 @@ export default function Dashboard() {
     });
   };
 
+  const handleResetLayers = () => {
+    setActiveLayers(new Set(['heat']));
+  };
+
   const handleSimChange = (type: string, val: number) => {
     setSimulationState(prev => ({ ...prev, [type]: val }));
   };
@@ -143,6 +147,7 @@ export default function Dashboard() {
               activeLayers={activeLayers}
               simulationState={simulationState}
               onSelectFeature={setSelectedFeature}
+              onResetLayers={handleResetLayers}
             />
           </div>
 

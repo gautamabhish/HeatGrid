@@ -210,7 +210,7 @@ Return ONLY valid JSON matching this schema (no markdown):
         response = await loop.run_in_executor(
             None,
             lambda: client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-3-flash-preview',
                 contents=prompt,
                 config={'system_instruction': 'You are an expert urban climate planner.','temperature':0.7}
             )
